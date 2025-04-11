@@ -1,0 +1,15 @@
+# Foundry
+out/
+broadcast/
+lib/
+forge-artifacts/
+
+# Node/Hardhat
+node_modules/
+cache/
+artifacts/
+
+# OS
+.DS_Store
+
+.env
