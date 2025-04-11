@@ -1,8 +1,15 @@
+### Commands
+
 `forge test` => test using local testnet (anvil)
+
 `forge test --forl-url $SEPOLIA_RPC_URL` => test while simulating in sepolia testnet
+
 `-vv -vvv` => verbose
+
 `forge coverage` => shows the coverage of tests for each contract (very useful)
+
 `chisel` => code solidity in console
+
 `https://www.evm.codes/` => gas prices per instruction
 
 ### Naming Conventions
