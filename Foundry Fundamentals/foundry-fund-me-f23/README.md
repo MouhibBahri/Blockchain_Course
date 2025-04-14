@@ -12,6 +12,8 @@
 
 `https://www.evm.codes/` => gas prices per instruction
 
+`cast sig "fund()"` => get EVM signature of a function
+
 ### Naming Conventions
 
 - Add i\_ for immutable variables: immutable i_owner
