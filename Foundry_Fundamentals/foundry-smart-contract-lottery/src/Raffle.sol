@@ -36,6 +36,11 @@ contract Raffle is VRFConsumerBaseV2Plus {
     error Raffle__sendMoreToEnterRaffle();
     error Raffle__transferFailed();
     error Raffle__raffleNotOpen();
+    error Raffle__UpkeepNotNeeded(
+        uint256 balance,
+        uint256 playersLength,
+        uint256 raffleState
+    );
 
     /* Type Declarations */
     enum RaffleState {
@@ -92,10 +97,31 @@ contract Raffle is VRFConsumerBaseV2Plus {
         emit RaffleEntered(msg.sender);
     }
 
-    function pickWinner() external {
-        if (block.timestamp - s_lastTimeStamp < i_interval) {
-            revert();
+    /**
+     * @dev This function will be called by Chianlink nodes to check
+     * if the lottery is ready to have a winner picked
+     */
+    function checkUpkeep(
+        bytes memory /*checkData*/
+    ) public view returns (bool upkeepNeeded, bytes memory /*performData*/) {
+        bool timeHasPassed = block.timestamp - s_lastTimeStamp >= i_interval;
+        bool isOpen = s_raffleState == RaffleState.OPEN;
+        bool hasBalance = address(this).balance > 0;
+        bool hasPlayers = s_players.length > 0;
+        upkeepNeeded = timeHasPassed && isOpen && hasBalance && hasPlayers;
+        return (upkeepNeeded, "");
+    }
+
+    function performUpkeep(bytes calldata /*performData*/) external {
+        (bool upkeepNeeded, ) = checkUpkeep("");
+        if (!upkeepNeeded) {
+            revert Raffle__UpkeepNotNeeded(
+                address(this).balance,
+                s_players.length,
+                uint256(s_raffleState)
+            );
         }
+
         s_raffleState = RaffleState.CALCULATING;
         VRFV2PlusClient.RandomWordsRequest memory request = VRFV2PlusClient
             .RandomWordsRequest({
@@ -109,12 +135,12 @@ contract Raffle is VRFConsumerBaseV2Plus {
                     VRFV2PlusClient.ExtraArgsV1({nativePayment: false})
                 )
             });
-        uint256 requestId = s_vrfCoordinator.requestRandomWords(request);
+        s_vrfCoordinator.requestRandomWords(request);
     }
 
     // CEI: Checks, Effects, Interactions Pattern
     function fulfillRandomWords(
-        uint256 requestId,
+        uint256 /*requestId*/,
         uint256[] calldata randomWords
     ) internal override {
         // Checks
