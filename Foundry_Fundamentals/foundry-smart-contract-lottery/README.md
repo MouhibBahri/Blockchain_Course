@@ -1,6 +1,8 @@
 ## Lessons Learned
 
-`openchain.xyz` => a large database of function signatures that helps find the function name from its hex signature
+`openchain.xyz` => a large database of function signatures that helps find the function name from its hex signature.
+
+`forge coverage --report debug` => ouputs a report of what lines have not been tested yet. Add `> coverage.txt` to pipe the ouput to a txt file.
 
 ## Foundry
 
