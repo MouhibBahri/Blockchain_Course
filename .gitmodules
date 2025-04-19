@@ -30,4 +30,4 @@
 	url = https://github.com/transmissions11/solmate
 [submodule "Foundry_Fundamentals/foundry-smart-contract-lottery/lib/foundry-devops"]
 	path = Foundry_Fundamentals/foundry-smart-contract-lottery/lib/foundry-devops
-	url = https://github.com/Cyfrin/foundry-devops
+	url = https://github.com/cyfrin/foundry-devops
